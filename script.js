@@ -208,18 +208,22 @@ function initGame() {
 function doJump() {
   if (videoPlaying) return;
 
+  // Initialize audio context (creates it if needed)
   SFX.init();
-  SFX.resume();
-  // SFX.startBGM();  // still commented out
+
+  // Critical for mobile: resume and unlock immediately on user gesture
+  SFX.resume()
+    .then(() => {
+      // This silent pop unlocks iOS Web Audio
+      SFX.unlock();
+    })
+    .catch((e) => console.log("Audio resume error", e));
+
+  // No background music (keep commented)
+  // SFX.startBGM();
 
   if (state !== "running") {
     initGame();
-    // Unlock audio on mobile by playing a silent sound
-    SFX.resume()
-      .then(() => {
-        SFX.unlock();
-      })
-      .catch(() => {});
     return;
   }
 
@@ -227,7 +231,7 @@ function doJump() {
     kvy = JUMP_V;
     grounded = false;
     squashT = 0;
-    SFX.mew();
+    SFX.mew(); // Jump sound will now work on mobile
   }
 }
 document.addEventListener("keydown", (e) => {
