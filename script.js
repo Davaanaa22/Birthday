@@ -394,7 +394,7 @@ function update() {
       // No victory jingle, no celebration music
       for (let i = 0; i < 10; i++) setTimeout(() => launchFW(true), i * 160);
       for (let i = 0; i < 140; i++) setTimeout(() => mkConfetti(), i * 28);
-      setTimeout(() => startVideoOnly(), 2000);
+      setTimeout(() => startVideoOnly(), 3000);
     }
   }
 
