@@ -549,18 +549,23 @@ const SFX = (() => {
     }
   }
 
-  function unlock() {
+  function forceUnlock() {
     if (!audioCtx) return;
-    // Create a silent buffer and play it to unlock audio on iOS/mobile
     try {
-      var buffer = audioCtx.createBuffer(1, 1, 22050);
-      var src = audioCtx.createBufferSource();
-      src.buffer = buffer;
-      src.connect(audioCtx.destination);
-      src.start();
-      console.log("Audio unlock attempted");
+      // Create a very short, quiet beep to activate audio
+      var now = audioCtx.currentTime;
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 440;
+      gain.gain.value = 0.001; // extremely quiet – user won't hear it
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.02);
+      console.log("Audio force-unlock attempted");
     } catch (e) {
-      console.warn("Unlock failed", e);
+      console.warn("Force unlock failed", e);
     }
   }
   // Public API
@@ -568,7 +573,7 @@ const SFX = (() => {
     init,
     resume,
     startBGM,
-    unlock,
+    forceUnlock,
     stopBGM,
     playCelebrationMusic,
     mew,
