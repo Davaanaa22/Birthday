@@ -207,20 +207,27 @@ function initGame() {
 // ════════════════════════════════════════════════════════
 function doJump() {
   if (videoPlaying) return;
-  
+
   SFX.init();
-  SFX.resume(); 
-  
+  SFX.resume();
+  // SFX.startBGM();  // still commented out
+
   if (state !== "running") {
     initGame();
+    // Unlock audio on mobile by playing a silent sound
+    SFX.resume()
+      .then(() => {
+        SFX.unlock();
+      })
+      .catch(() => {});
     return;
   }
-  
+
   if (grounded) {
     kvy = JUMP_V;
     grounded = false;
     squashT = 0;
-    SFX.mew();  // Jump sound works
+    SFX.mew();
   }
 }
 document.addEventListener("keydown", (e) => {
