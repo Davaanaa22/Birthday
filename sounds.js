@@ -61,7 +61,8 @@ const SFX = (() => {
   }
 
   function resume() {
-    if (audioCtx && audioCtx.state === "suspended") {
+    if (!audioCtx) return Promise.resolve();
+    if (audioCtx.state === "suspended") {
       return audioCtx.resume();
     }
     return Promise.resolve();
@@ -550,11 +551,17 @@ const SFX = (() => {
 
   function unlock() {
     if (!audioCtx) return;
-    var buffer = audioCtx.createBuffer(1, 1, 22050);
-    var src = audioCtx.createBufferSource();
-    src.buffer = buffer;
-    src.connect(audioCtx.destination);
-    src.start();
+    // Create a silent buffer and play it to unlock audio on iOS/mobile
+    try {
+      var buffer = audioCtx.createBuffer(1, 1, 22050);
+      var src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+      src.connect(audioCtx.destination);
+      src.start();
+      console.log("Audio unlock attempted");
+    } catch (e) {
+      console.warn("Unlock failed", e);
+    }
   }
   // Public API
   return {
