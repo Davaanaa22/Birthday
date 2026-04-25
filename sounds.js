@@ -61,7 +61,10 @@ const SFX = (() => {
   }
 
   function resume() {
-    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    if (audioCtx && audioCtx.state === "suspended") {
+      return audioCtx.resume();
+    }
+    return Promise.resolve();
   }
 
   // -------------------------------------------------------------
@@ -545,11 +548,20 @@ const SFX = (() => {
     }
   }
 
+  function unlock() {
+    if (!audioCtx) return;
+    var buffer = audioCtx.createBuffer(1, 1, 22050);
+    var src = audioCtx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(audioCtx.destination);
+    src.start();
+  }
   // Public API
   return {
     init,
     resume,
     startBGM,
+    unlock,
     stopBGM,
     playCelebrationMusic,
     mew,
