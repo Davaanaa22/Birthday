@@ -207,18 +207,20 @@ function initGame() {
 // ════════════════════════════════════════════════════════
 function doJump() {
   if (videoPlaying) return;
+  
   SFX.init();
-  SFX.resume();
-  // SFX.startBGM();   // <-- REMOVE or COMMENT this line
+  SFX.resume(); 
+  
   if (state !== "running") {
     initGame();
     return;
   }
+  
   if (grounded) {
     kvy = JUMP_V;
     grounded = false;
     squashT = 0;
-    SFX.mew();
+    SFX.mew();  // Jump sound works
   }
 }
 document.addEventListener("keydown", (e) => {
