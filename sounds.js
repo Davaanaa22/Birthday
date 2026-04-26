@@ -61,11 +61,7 @@ const SFX = (() => {
   }
 
   function resume() {
-    if (!audioCtx) return Promise.resolve();
-    if (audioCtx.state === "suspended") {
-      return audioCtx.resume();
-    }
-    return Promise.resolve();
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
   }
 
   // -------------------------------------------------------------
@@ -549,31 +545,11 @@ const SFX = (() => {
     }
   }
 
-  function forceUnlock() {
-    if (!audioCtx) return;
-    try {
-      // Create a very short, quiet beep to activate audio
-      var now = audioCtx.currentTime;
-      var osc = audioCtx.createOscillator();
-      var gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = 440;
-      gain.gain.value = 0.001; // extremely quiet – user won't hear it
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.02);
-      console.log("Audio force-unlock attempted");
-    } catch (e) {
-      console.warn("Force unlock failed", e);
-    }
-  }
   // Public API
   return {
     init,
     resume,
     startBGM,
-    forceUnlock,
     stopBGM,
     playCelebrationMusic,
     mew,
