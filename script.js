@@ -207,28 +207,18 @@ function initGame() {
 // ════════════════════════════════════════════════════════
 function doJump() {
   if (videoPlaying) return;
-
   SFX.init();
-  SFX.resume()
-    .then(() => {
-      // This plays an ultra-quiet beep to unlock audio on mobile
-      SFX.forceUnlock();
-    })
-    .catch((e) => console.log("Audio error", e));
-
-  // No background music
-  // SFX.startBGM();
-
+  SFX.resume();
+  // SFX.startBGM();   // <-- REMOVE or COMMENT this line
   if (state !== "running") {
     initGame();
     return;
   }
-
   if (grounded) {
     kvy = JUMP_V;
     grounded = false;
     squashT = 0;
-    SFX.mew(); // Now meow will work on mobile
+    SFX.mew();
   }
 }
 document.addEventListener("keydown", (e) => {
@@ -394,7 +384,7 @@ function update() {
       // No victory jingle, no celebration music
       for (let i = 0; i < 10; i++) setTimeout(() => launchFW(true), i * 160);
       for (let i = 0; i < 140; i++) setTimeout(() => mkConfetti(), i * 28);
-      setTimeout(() => startVideoOnly(), 3000);
+      setTimeout(() => startVideoOnly(), 2000);
     }
   }
 
